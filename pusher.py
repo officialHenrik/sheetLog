@@ -3,6 +3,8 @@ import time
 import os
 from oauth2client.service_account import ServiceAccountCredentials
 
+from influxdb import InfluxDBClient
+
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
@@ -20,9 +22,29 @@ RPiTemp = float(p.readline())
 RPiTemp = RPiTemp/1000.0
 
 # Get temperature
-S0_temp = 25
-S0_humid = 100
+
+"""Instantiate a connection to the InfluxDB."""
+#host='192.168.1.101'
+host='localhost'
+port=8086
+user = 'root'
+password = 'root'
+dbname = 'db_sensors'
+query = 'select temperature, humidity FROM climate group by * order by desc limit 1;'
+
+client = InfluxDBClient(host, port, user, password, dbname)
+
+res = client.query(query)
+res = res.get_points('climate')
+
+meas = next(res)
+S0_temp = meas['temperature']
+S0_humid = meas['humidity']
+
+meas = next(res)
+S1_temp = meas['temperature']
+S1_humid = meas['humidity']
 
 # Write data to sheet
-newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S")), S0_temp, S0_humid, RPiTemp]
+newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S")), S0_temp, S0_humid, S1_temp, S1_humid, RPiTemp]
 ws.append_row(newRow)
