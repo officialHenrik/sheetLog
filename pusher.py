@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import gspread
 import time
 import os

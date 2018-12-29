@@ -18,5 +18,11 @@ git clone https://github.com/officialHenrik/sheetLog.git
 
 sudo crontab -e
 
+0,15,30,45 * * * * /usr/bin/python /home/pi/sheetLog/pusher.py
+0,15,30,45 * * * * cd /home/pi/sheetLog/ && python /usr/bin/python pusher.py
+
+
+https://influxdb-python.readthedocs.io/en/latest/examples.html
+https://gspread.readthedocs.io/en/latest/oauth2.html
 
 
