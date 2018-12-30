@@ -12,9 +12,9 @@ scope = ['https://spreadsheets.google.com/feeds',
 
 #print("connecting to sheet")
 # Connect to sheet
-credentials = ServiceAccountCredentials.from_json_keyfile_name('Torpgarden-f1098109e149.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('xyz.json', scope)
 gc = gspread.authorize(credentials)
-sh = gc.open_by_key("1lK_qpAP7nXOxBu1Nl5oPMKbYJdeecNaP0l8MHCkeJWM")
+sh = gc.open_by_key("key_xyz")
 ws = sh.worksheet("Blad1")
 #print("Connected")
 

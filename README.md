@@ -9,10 +9,9 @@ sudo apt-get install git
 sudo apt-get install python-pip
 pip install --upgrade google-api-python-client oauth2client
 pip install gspread
+pip install influxdb
 
-git clone https://github.com/officialHenrik/sheetLog.git
-
-Step 3: Setup job to run every hout X:00 X:15 X:30 X:45
+Step 3: Setup job to run every 15 minutes X:00 X:15 X:30 X:45
 crontab -e
 0,15,30,45 * * * * /home/pi/sheetLog/runner.sh
 
