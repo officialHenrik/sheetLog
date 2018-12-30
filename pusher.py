@@ -46,4 +46,4 @@ S1_humid = meas['humidity']
 newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S")), S0_temp, S0_humid, S1_temp, S1_humid, RPiTemp]
 ws.append_row(newRow)
 
-print(newRow)
+#print(newRow)
