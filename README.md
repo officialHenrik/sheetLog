@@ -1,14 +1,8 @@
 
-Influx config
-host : 'localhost'
-port : 8086
-user : 'root'
-password : 'root'
-dbname : 'db_sensors'
+Step 1: Turn on the Google Sheets API, download json file
+Step 1.1: Share the sheet and replace the key in pusher.py
 
-SELECT * FROM measurements group by * order by desc limit 1
-
-På RPI
+Step 2: Install on rpi
 sudo apt-get install git
 sudo apt-get install python-pip
 pip install --upgrade google-api-python-client oauth2client
@@ -16,12 +10,12 @@ pip install gspread
 
 git clone https://github.com/officialHenrik/sheetLog.git
 
-sudo crontab -e
+Step 3: Setup job to run every hout X:00 X:15 X:30 X:45
+crontab -e
+0,15,30,45 * * * * /home/pi/sheetLog/runner.sh
 
-0,15,30,45 * * * * /usr/bin/python /home/pi/sheetLog/pusher.py
-0,15,30,45 * * * * cd /home/pi/sheetLog/ && python /usr/bin/python pusher.py
 
-
+Help:
 https://influxdb-python.readthedocs.io/en/latest/examples.html
 https://gspread.readthedocs.io/en/latest/oauth2.html
 
