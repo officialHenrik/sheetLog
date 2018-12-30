@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
+import config
 import gspread
 import time
 import os
 from oauth2client.service_account import ServiceAccountCredentials
-
 from influxdb import InfluxDBClient
 
 scope = ['https://spreadsheets.google.com/feeds',
@@ -12,10 +12,10 @@ scope = ['https://spreadsheets.google.com/feeds',
 
 #print("connecting to sheet")
 # Connect to sheet
-credentials = ServiceAccountCredentials.from_json_keyfile_name('xyz.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name(config.GOOGLE['credentials'], scope)
 gc = gspread.authorize(credentials)
-sh = gc.open_by_key("key_xyz")
-ws = sh.worksheet("Blad1")
+sh = gc.open_by_key(config.GOOGLE['key'])
+ws = sh.worksheet(config.GOOGLE['sheet'])
 #print("Connected")
 
 # Collect data
@@ -28,17 +28,10 @@ RPiTemp = RPiTemp/1000.0
 # Get temperature
 
 """Instantiate a connection to the InfluxDB."""
-#host='192.168.1.101'
-host='localhost'
-port=8086
-user = 'root'
-password = 'root'
-dbname = 'db_sensors'
-query = 'select temperature, humidity FROM climate group by * order by desc limit 1;'
+client = InfluxDBClient(config.DB['host'], config.DB['port'], config.DB['user'], config.DB['password'], config.DB['dbname'])
+res = client.query(config.DB['query'])
 
-client = InfluxDBClient(host, port, user, password, dbname)
-
-res = client.query(query)
+#print("{}".format(res))
 res = res.get_points('climate')
 
 meas = next(res)
@@ -53,4 +46,4 @@ S1_humid = meas['humidity']
 newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S")), S0_temp, S0_humid, S1_temp, S1_humid, RPiTemp]
 ws.append_row(newRow)
 
-#print(newRow)
+print(newRow)
