@@ -1,4 +1,7 @@
+Python script for push data to google spreedsheet from rasberry pi running Elphy (https://www.elphy.se/) 
+Read last inserted temperature and humidity from the influxdb and append it to a google spreedsheet
 
+Usage: 
 Step 1: Turn on the Google Sheets API, download json file and copy to rpi
         scp xxxx.json pi@192.168.1.101:/home/pi/sheetLog
 
@@ -19,8 +22,9 @@ crontab -e
 0,15,30,45 * * * * /home/pi/sheetLog/runner.sh
 
 
-Help:
+Inspiratation:
 https://influxdb-python.readthedocs.io/en/latest/examples.html
 https://gspread.readthedocs.io/en/latest/oauth2.html
+https://developers.google.com/sheets/api/quickstart/python
 
 
