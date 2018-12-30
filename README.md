@@ -6,6 +6,7 @@ Step 1: Turn on the Google Sheets API, download json file and copy to rpi
         scp xxxx.json pi@192.168.1.101:/home/pi/sheetLog
 
 Step 1.1: Share the sheet and copy the key.
+
 Step 1.2: rename config_template.py to config.py and fill in key and json file name
 
 Step 2: Install on rpi
