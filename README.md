@@ -22,7 +22,7 @@ crontab -e
 0,15,30,45 * * * * /home/pi/sheetLog/runner.sh
 
 
-Inspiratation:
+Web:
 https://influxdb-python.readthedocs.io/en/latest/examples.html
 https://gspread.readthedocs.io/en/latest/oauth2.html
 https://developers.google.com/sheets/api/quickstart/python
