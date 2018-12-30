@@ -1,5 +1,7 @@
 
-Step 1: Turn on the Google Sheets API, download json file
+Step 1: Turn on the Google Sheets API, download json file and copy to rpi
+scp xxxx.json pi@192.168.1.101:/home/pi/sheetLog
+
 Step 1.1: Share the sheet and replace the key in pusher.py
 
 Step 2: Install on rpi
