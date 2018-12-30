@@ -5,7 +5,7 @@ DB = {
     'user': 'root',
     'password': 'root',
     'port': 8086,
-    'query': 'select temperature, humidity FROM climate group by * order by desc limit 1;'
+    'query': 'select temperature, humidity, abs_humidity, dewpoint FROM climate group by * order by desc limit 1;'
 }
 
 GOOGLE = {
