@@ -18,18 +18,14 @@ ws = sh.worksheet(config.GOOGLE['sheet'])
 
 # Collect data
 
-# get Rpi temp
-p = os.popen('cat /sys/class/thermal/thermal_zone0/temp', "r")
-RPiTemp = float(p.readline())
-RPiTemp = RPiTemp/1000.0
+#add time
+newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S"))]
 
-# Get temperature
-
-"""Instantiate a connection to the InfluxDB."""
+# Get sensor data
+# Instantiate a connection to the InfluxDB and ask for latest data
 client = InfluxDBClient(config.DB['host'], config.DB['port'], config.DB['user'], config.DB['password'], config.DB['dbname'])
 res = client.query(config.DB['query'])
 
-newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S"))]
 for sensor in res:
     #print(sensor)
     t  = sensor[0]['temperature']
@@ -37,7 +33,11 @@ for sensor in res:
     ah = sensor[0]['abs_humidity']
     d  = sensor[0]['dewpoint']
     newRow.extend([t, h, ah, d])
-  
+
+# get Rpi temp
+p = os.popen('cat /sys/class/thermal/thermal_zone0/temp', "r")
+RPiTemp = float(p.readline())
+RPiTemp = RPiTemp/1000.0
 newRow.extend([RPiTemp])
 
 # Write data to sheet
