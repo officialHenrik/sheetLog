@@ -23,6 +23,8 @@ Step 4: Setup rpi job to run every 15 minutes X:00 X:15 X:30 X:45
         crontab -e
 
         0,15,30,45 * * * * /home/pi/sheetLog/runner.sh
+Note:
+Max number of rows in a google sheet is currently 5M, 4 samples/h -> 5000000/24/365/4 -> 143 years of logging -> safe
 
 Web:
 https://influxdb-python.readthedocs.io/en/latest/examples.html
