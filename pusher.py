@@ -1,26 +1,30 @@
 #!/usr/bin/python
 
 import config
+
 import gspread
-import time
 import os
 from oauth2client.service_account import ServiceAccountCredentials
+
 from influxdb import InfluxDBClient
+import time
 
-scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
+import schedule
 
+
+# ------------------------------------------------------
 class GooglePusher:
 
-    def __init__ (self, data_collector_cb):
+    def __init__ (self, config, data_collector_cb):
         self.data_collector_cb = data_collector_cb
+        self.cfg = config
         
     def push(self)
         # Connect to sheet
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(config.GOOGLE['credentials'], scope)
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(cfg['credentials'], cfg['scope'])
         gc = gspread.authorize(credentials)
-        sh = gc.open_by_key(config.GOOGLE['key'])
-        ws = sh.worksheet(config.GOOGLE['sheet'])
+        sh = gc.open_by_key(cfg['key'])
+        ws = sh.worksheet(cfg['sheet'])
 
         # Collect data
         newRow = self.data_collector_cb()
@@ -29,25 +33,48 @@ class GooglePusher:
         ws.append_row(newRow)
 
 
+# ------------------------------------------------------
+class InfluxDbCollector:
+    
+    def __init__(self, config)
+        self.cfg = config
 
-#add time
-newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S"))]
+    def collect(self)
+    
+        #add time
+        newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S"))]
 
-# Get sensor data
-# Instantiate a connection to the InfluxDB and ask for latest data
-client = InfluxDBClient(config.DB['host'], config.DB['port'], config.DB['user'], config.DB['password'], config.DB['dbname'])
-res = client.query(config.DB['query'])
+        # Instantiate a connection to the InfluxDB
+        client = InfluxDBClient(cfg['host'], cfg['port'], cfg['user'], cfg['password'], cfg['dbname'])
+        
+        # Get sensor data
+        res = client.query(cfg['query'])
 
-for sensor in res:
-    #print(sensor)
-    t  = sensor[0]['temperature']
-    h  = sensor[0]['humidity']
-    ah = sensor[0]['abs_humidity']
-    d  = sensor[0]['dewpoint']
-    newRow.extend([t, h, ah, d])
+        # iterate the sensors
+        for sensor in res:
+            t  = sensor[0]['temperature']
+            h  = sensor[0]['humidity']
+            ah = sensor[0]['abs_humidity']
+            d  = sensor[0]['dewpoint']
+            newRow.extend([t, h, ah, d])
 
-# get Rpi temp
-p = os.popen('cat /sys/class/thermal/thermal_zone0/temp', "r")
-RPiTemp = float(p.readline())
-RPiTemp = RPiTemp/1000.0
-newRow.extend([RPiTemp])
+
+# ------------------------------------------------------
+collector = InfluxDbCollector(config.DB)
+pusher = GooglePusher(collector.collect, config.GOOGLE)
+
+
+# Schedule logging every..
+schedule.every(config.log_interval_minutes).minutes.do(pusher.push)
+
+# ------------------------------------------------------
+# Run forever
+print(" Logger initiated")
+
+try:
+    while True:
+       	schedule.run_pending()
+        time.sleep(1)
+finally:
+    print(" Logger failed")
+    
