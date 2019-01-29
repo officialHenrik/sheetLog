@@ -1,4 +1,4 @@
-Python script for push data to google spreadsheet from rasberry pi running Elphy (https://www.elphy.se/) 
+Python script for push data to google spreadsheet from raspberry pi running Elphy (https://www.elphy.se/) 
 Read last inserted temperature and humidity from the influxdb and append it to a google spreadsheet
 
 Usage: 
