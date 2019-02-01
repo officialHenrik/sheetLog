@@ -14,7 +14,7 @@ Step 2: Install on rpi
 
         sudo apt-get install git python-pip
 
-        pip install --upgrade google-api-python-client oauth2client gspread influxdb
+        pip install --upgrade google-api-python-client google-auth gspread influxdb
 
 Step 3: Clone this repo to rpi /home/pi/sheetLog/
 
