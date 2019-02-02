@@ -8,6 +8,7 @@ from google.auth.transport.requests import AuthorizedSession
 import gspread
 
 from influxdb import InfluxDBClient
+import requests
 import time
 
 import schedule
@@ -45,20 +46,31 @@ class InfluxDbCollector:
     def __init__(self, config):
         self.cfg = config
         # Instantiate a connection to the InfluxDB
-        self.client = InfluxDBClient(self.cfg['host'], self.cfg['port'], self.cfg['user'], self.cfg['password'], self.cfg['dbname'])
+        self.client = InfluxDBClient(self.cfg['host'], 
+                                     self.cfg['port'], 
+                                     self.cfg['user'], 
+                                     self.cfg['password'], 
+                                     self.cfg['dbname'])
     
     def collect(self):
     
-        # Get sensor data
-        res = self.client.query(self.cfg['query'])
-        
         #add time
         newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S"))]
-        # iterate the sensors
-        for sensor in res:
-            for key in sensor[0]:
-                newRow.extend([sensor[0][key]])
+        
+        # Get sensor data
+        try:
+            res = self.client.query(self.cfg['query'])
             
+            # iterate the sensors
+            for sensor in res:
+                for key in sensor[0]:
+                    newRow.extend([sensor[0][key]])
+                    
+        except requests.exceptions.ConnectionError:
+            print("influx connection error")
+        except:
+            print("influx other errror")
+ 
         return newRow 
 
 # ------------------------------------------------------
@@ -69,13 +81,14 @@ pusher = GooglePusher(config.GOOGLE, collector.collect)
 # Schedule logging every..
 schedule.every(config.DB['log_interval_minutes']).minutes.do(pusher.push)
 
-print("log interval: {}".format(config.DB['log_interval_minutes']))
 
 # ------------------------------------------------------
 # Run forever
 print(" Logger initiated")
+print("  log interval: {}".format(config.DB['log_interval_minutes']))
 
 try:
+    schedule.run_all()
     while True:
        	schedule.run_pending()
         time.sleep(1)
