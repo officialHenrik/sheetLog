@@ -29,7 +29,9 @@ Max number of rows in a google sheet is currently 5M, 4 samples/h -> 5000000/24/
 
 Web:
 https://influxdb-python.readthedocs.io/en/latest/examples.html
+
 https://gspread.readthedocs.io/en/latest/oauth2.html
+
 https://developers.google.com/sheets/api/quickstart/python
 
 
