@@ -18,29 +18,12 @@ Step 2: Install on rpi
 
 Step 3: Clone this repo to rpi /home/pi/sheetLog/
 
-Step 4: Setup service, /lib/systemd/system/SheetLogger.service 
+Step 4: Setup rpi job to run every 15 minutes X:00 X:15 X:30 X:45
 
-         [Unit]
-         Description=My google sheet logger Service
-         After=multi-user.target
+        crontab -e
 
-         [Service]
-         Type=idle
-         WorkingDirectory=/home/pi/sheetLog/
-         ExecStart=/usr/bin/python3 /home/pi/sheetLog/sheetlog.py
-         User=pi
-         Restart=always
-
-         [Install]
-         WantedBy=multi-user.target
-         
-Step 5: Install and start service
-        sudo chmod 644 /lib/systemd/system/SheetLogger.service
-        sudo systemctl daemon-reload
-        sudo systemctl enable SheetLogger.service
-        sudo reboot
-
-        
+        0,15,30,45 * * * * /home/pi/sheetLog/runner.sh
+    
 Note:
 Max number of rows in a google sheet is currently 5M, 4 samples/h -> 5000000/24/365/4 -> 143 years of logging -> safe
 
