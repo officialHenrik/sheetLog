@@ -33,7 +33,12 @@ Step 4: Setup service, /lib/systemd/system/SheetLogger.service
 
          [Install]
          WantedBy=multi-user.target
-
+         
+Step 5: Install and start service
+        sudo chmod 644 /lib/systemd/system/SheetLogger.service
+        sudo systemctl daemon-reload
+        sudo systemctl enable SheetLogger.service
+        sudo reboot
 
         
 Note:
