@@ -56,16 +56,17 @@ class InfluxDbCollector:
     
         #add time
         newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S"))]
-        
+
         # Get sensor data
         try:
-            res = self.client.query(self.cfg['query'])
-            
-            # iterate the sensors
-            for sensor in res:
-                for key in sensor[0]:
-                    newRow.extend([sensor[0][key]])
-                    
+            results = self.client.query(self.cfg['query1'] + self.cfg['query2'] + self.cfg['query3'] + self.cfg['query4'])
+
+            # iterate the results
+            for res in results:
+                for sensor in res:
+                    for key in sensor[0]:
+                        newRow.extend([sensor[0][key]])
+
         except requests.exceptions.ConnectionError:
             print("influx connection error")
         except:
@@ -94,4 +95,4 @@ try:
         time.sleep(1)
 finally:
     print(" Logger failed")
-    
+

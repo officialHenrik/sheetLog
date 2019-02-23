@@ -5,8 +5,10 @@ DB = {
     'user': 'root',
     'password': 'root',
     'port': 8086,
-    #'query': 'select temperature, humidity, abs_humidity, dewpoint FROM climate group by * order by desc limit 1;',
-    'query': 'select mean(temperature), mean(humidity), mean(abs_humidity), mean(dewpoint) FROM climate time >= now() - 15m"',
+    #'query1': 'select temperature, humidity, abs_humidity, dewpoint FROM climate group by * order by desc limit 1;',
+    #'query2': 'select mean(temperature), mean(humidity), mean(abs_humidity), mean(dewpoint) FROM climate time >= now() - 15m"',
+    'query3': ...
+    'query4y': ...
     'log_interval_minutes': 15
 }
 
