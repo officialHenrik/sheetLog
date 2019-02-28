@@ -65,7 +65,8 @@ class InfluxDbCollector:
             for res in results:
                 for sensor in res:
                     for key in sensor[0]:
-                        newRow.extend([sensor[0][key]])
+                        if key != "time":
+                            newRow.extend([sensor[0][key]])
 
         except requests.exceptions.ConnectionError:
             print("influx connection error")
