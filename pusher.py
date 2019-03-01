@@ -62,7 +62,7 @@ class InfluxDbCollector:
         # Get sensor data
         try:
             for query in self.cfg['querys']:
-                print(query)
+                #print(query)
                 res = self.client.query(query)
                 for sensor in res:
                     for key in sensor[0]:
