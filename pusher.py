@@ -17,8 +17,8 @@ import schedule
 # ------------------------------------------------------
 class GooglePusher:
 
-    def __init__ (self, config, data_collector_cb):
-        self.data_collector_cb = data_collector_cb
+    def __init__ (self, config, data_collector_cbs):
+        self.data_collector_cbs = data_collector_cbs
         self.cfg = config
 
         self.credentials = service_account.Credentials.from_service_account_file(self.cfg['credentials'])
@@ -33,8 +33,12 @@ class GooglePusher:
 
     def push(self):
         
+        #add time
+        newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S"))]
+        
         # Collect data
-        newRow = self.data_collector_cb()
+        for cb in self.data_collector_cbs:
+            newRow += cb()
         
         # Write data to end of sheet
         self.ws.append_row(newRow)
@@ -54,15 +58,12 @@ class InfluxDbCollector:
     
     def collect(self):
     
-        #add time
-        newRow = [str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S"))]
-
+        newRow = []
         # Get sensor data
         try:
-            results = self.client.query(self.cfg['query1'] + self.cfg['query2'] + self.cfg['query3'] + self.cfg['query4'])
-
-            # iterate the results
-            for res in results:
+            for query in self.cfg['querys']:
+                print(query)
+                res = self.client.query(query)
                 for sensor in res:
                     for key in sensor[0]:
                         if key != "time":
@@ -75,9 +76,11 @@ class InfluxDbCollector:
  
         return newRow 
 
+    
 # ------------------------------------------------------
-collector = InfluxDbCollector(config.DB)
-pusher = GooglePusher(config.GOOGLE, collector.collect)
+collector  = InfluxDbCollector(config.DB)
+collector2 = InfluxDbCollector(config.DB2)
+pusher = GooglePusher(config.GOOGLE, [collector.collect, collector2.collect])
 
 
 # Schedule logging every..
