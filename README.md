@@ -39,10 +39,10 @@ Step 5: Install and start service
          sudo chmod 644 /lib/systemd/system/SheetLogger.service
          sudo systemctl daemon-reload
          sudo systemctl enable SheetLogger.service
-        sudo reboot
+         sudo reboot
         
 Note:
-Max number of rows in a google sheet is currently 5M, 4 samples/h -> 5000000/24/365/4 -> 143 years of logging -> safe
+Max number of cell in a google sheet is currently 5M (also counting empty in all spread sheets)
 
 Web:
 https://influxdb-python.readthedocs.io/en/latest/examples.html
