@@ -84,19 +84,17 @@ pusher = GooglePusher(config.GOOGLE, [collector.collect, collector2.collect])
 
 
 # Schedule logging every..
-schedule.every(config.DB['log_interval_minutes']).minutes.do(pusher.push)
-
+schedule.every().minute.at(":00").do(pusher.push)
 
 # ------------------------------------------------------
 # Run forever
 print(" Logger initiated")
-print("  log interval: {}".format(config.DB['log_interval_minutes']))
 
 try:
     schedule.run_all()
     while True:
        	schedule.run_pending()
-        time.sleep(1)
+        time.sleep(0.5)
 finally:
     print(" Logger failed")
 
