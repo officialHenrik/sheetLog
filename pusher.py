@@ -65,7 +65,7 @@ class InfluxDbCollector:
                 #print(query)
                 res = self.client.query(query)
                 for sensor in res:
-                    for key in sensor[0]:
+                    for key in sorted(sensor[0]):
                         if key != "time":
                             newRow.extend([sensor[0][key]])
 
