@@ -27,7 +27,7 @@ Step 4: Setup service, /lib/systemd/system/SheetLogger.service
          [Service]
          Type=idle
          WorkingDirectory=/home/pi/sheetLog/
-         ExecStart=/usr/bin/python3 /home/pi/sheetLog/sheetlog.py
+         ExecStart=/usr/bin/python3 /home/pi/sheetLog/main.py
          User=pi
          Restart=always
 
