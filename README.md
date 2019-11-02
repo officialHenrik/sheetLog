@@ -12,9 +12,7 @@ Step 1.2: rename config_template.py to config.py and fill in key and json file n
 
 Step 2: Install on rpi
 
-        sudo apt-get install git python-pip
-
-        pip install --upgrade google-api-python-client google-auth gspread influxdb
+        pip install --upgrade google-api-python-client gspread influxdb
 
 Step 3: Clone this repo to rpi /home/pi/sheetLog/
         
