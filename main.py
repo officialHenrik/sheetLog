@@ -13,7 +13,7 @@ class Pusher:
     def __init__ (self, config):
         self.c1 = Collector(config.DB)
         self.c2 = Collector(config.DB2)
-        self.s1 = SheetItf(config.GOOGLE)
+        self.s1 = SheetItf(config.GOOGLE['credentials'], config.GOOGLE['scope'], config.GOOGLE['key'], config.GOOGLE['sheet'])
 
     def push(self):
         self.s1.addToRow([str(time.strftime("%d/%m/%Y")), str(time.strftime("%H:%M:%S"))])
