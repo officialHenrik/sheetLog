@@ -19,6 +19,7 @@ class Collector:
     def collect(self):
 
         newRow = []
+        addCnt = 0
         # Get sensor data
         try:
             for query in self.cfg['querys']:
@@ -27,13 +28,16 @@ class Collector:
                 for sensor in res:
                     for key in sorted(sensor[0]):
                         if key != "time":
+                            addCnt = addCnt+1
                             newRow.extend([sensor[0][key]])
 
         except requests.exceptions.ConnectionError:
             print("influx connection error")
-            newRow.extend(" ")
         except:
             print("influx other errror")
+        
+        # add empty col if nothing was added
+        if addCnt == 0:
             newRow.extend(" ")
 
         return newRow
