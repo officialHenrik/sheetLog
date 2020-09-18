@@ -6,18 +6,18 @@ import requests
 
 # ------------------------------------------------------
 class Collector:
-    
+
     def __init__(self, config):
         self.cfg = config
         # Instantiate a connection to the InfluxDB
-        self.client = InfluxDBClient(self.cfg['host'], 
-                                     self.cfg['port'], 
-                                     self.cfg['user'], 
-                                     self.cfg['password'], 
+        self.client = InfluxDBClient(self.cfg['host'],
+                                     self.cfg['port'],
+                                     self.cfg['user'],
+                                     self.cfg['password'],
                                      self.cfg['dbname'])
-    
+
     def collect(self):
-    
+
         newRow = []
         # Get sensor data
         try:
@@ -31,15 +31,17 @@ class Collector:
 
         except requests.exceptions.ConnectionError:
             print("influx connection error")
+            newRow.extend(" ")
         except:
             print("influx other errror")
- 
-        return newRow 
+            newRow.extend(" ")
 
-        
+        return newRow
+
+
 # --------------------------------------------------------
 if __name__ == "__main__":
-    
+
     import config
 
     gp = Collector(config.DB)
