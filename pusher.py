@@ -57,7 +57,8 @@ class InfluxDbCollector:
                                      self.cfg['dbname'])
     
     def collect(self):
-    
+
+        addCnt=0
         newRow = []
         # Get sensor data
         try:
@@ -67,6 +68,7 @@ class InfluxDbCollector:
                 for sensor in res:
                     for key in sensor[0]:
                         if key != "time":
+                            addCnt = addCnt+1
                             newRow.extend([sensor[0][key]])
 
         except requests.exceptions.ConnectionError:
@@ -74,6 +76,9 @@ class InfluxDbCollector:
         except:
             print("influx other errror")
  
+        if addCnt == 0:
+            newRow.extend(" ")
+
         return newRow 
 
     
